@@ -50,6 +50,27 @@ function import_csv_to_sqlite(&$pdo, $csv_path, $options = array())
 }
 
 if(isset($_FILES['csv_import'])){
+  $dirPath = 'upload';
+  if (! is_dir($dirPath)) {  
+    mkdir($dirPath);
+  } 
+  else {
+    if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
+      $dirPath .= '/';
+    }
+    $files = glob($dirPath . '*', GLOB_MARK);
+    foreach ($files as $file) {
+        if (is_dir($file)) {
+            self::deleteDir($file);
+        } else {
+            unlink($file);
+        }
+    }
+    rmdir($dirPath);
+    mkdir($dirPath);
+  }
+  
+
   if (($_FILES['csv_import']['name']!="")){
   // Where the file is going to be stored
     $target_dir = "upload/";
